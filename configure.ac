@@ -51,10 +51,40 @@ AC_SUBST(CRASHLOGEMAIL)
 AC_DEFINE_UNQUOTED(CRASH_EMAILADDR,"$CRASHLOGEMAIL",[crash log email address])
 
 AC_ARG_WITH(boxtype,
-	[  --with-boxtype=NAME box type [[none,dm800...]]],
-	[BOXTYPE="$withval"],[BOXTYPE="dm800"])
+	AS_HELP_STRING([--with-boxtype],[build for BOXTYPE, $withval]),
+	[BOXTYPE="$withval"],[BOXTYPE=""])
 AC_SUBST(BOXTYPE)
 AC_DEFINE_UNQUOTED(BOXTYPE,"$BOXTYPE",[box type])
+
+AC_ARG_WITH(boxbrand,
+	AS_HELP_STRING([--with-boxbrand],[build for BOXBRAND, $withval]),
+	[BOXBRAND="$withval"],[BOXBRAND=""])
+AC_SUBST(BOXBRAND)
+AC_DEFINE_UNQUOTED(BOXBRAND,"$BOXBRAND",[box brand])
+
+AC_ARG_WITH(stbplatform,
+	AS_HELP_STRING([--with-stbplatform],[build for STBPLATFORM, $withval]),
+	[STBPLATFORM="$withval"],[STBPLATFORM=""])
+AC_SUBST(STBPLATFORM)
+AC_DEFINE_UNQUOTED(STBPLATFORM,"$STBPLATFORM",[stb platform])
+
+AC_ARG_WITH(e2rev,
+	AS_HELP_STRING([--with-e2rev],[value of E2REV, $withval]),
+	[E2REV="$withval"],[E2REV=""])
+AC_SUBST(E2REV)
+AC_DEFINE_UNQUOTED(E2REV,"$E2REV",[enigma2 revision])
+
+AC_ARG_WITH(oeminfo,
+	AS_HELP_STRING([--with-oeminfo],[value of OEMINFO, $withval]),
+	[OEMINFO="$withval"],[OEMINFO=""])
+AC_SUBST(OEMINFO)
+AC_DEFINE_UNQUOTED(OEMINFO,"$OEMINFO",[oem info])
+
+AC_ARG_WITH(arch,
+	AS_HELP_STRING([--with-arch],[build for architecture, $withval]),
+	[ARCHITECTURE="$withval"],[ARCHITECTURE=""])
+AC_SUBST(ARCHITECTURE)
+AC_DEFINE_UNQUOTED(ARCHITECTURE,"$ARCHITECTURE",[architecture type])
 
 AC_ARG_WITH(colorlcd,
 	AC_HELP_STRING([--with-colorlcd], [use 96x64 16bpp color display, yes or no]),
