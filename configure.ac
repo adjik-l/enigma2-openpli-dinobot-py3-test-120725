@@ -345,7 +345,52 @@ if test x"$withosdanimation" != xno ; then
 
 	AC_DEFINE(HAVE_OSDANIMATION, 1,[Define if driver supports animation of osd])
 fi
+
 AM_CONDITIONAL(HAVE_OSDANIMATION, test x"$withosdanimation" != xno)
+AC_ARG_WITH(amlogic,
+	AC_HELP_STRING([--with-amlogic], [use amlogic MPEG decoder]),
+	[[with_amlogic=$withval]],
+	[[with_amlogic=no]]
+)
+AM_CONDITIONAL(HAVE_AMLOGIC, test x"$with_amlogic" = xyes)
+if test x"$with_amlogic" = xyes ; then
+	AC_DEFINE(HAVE_AMLOGIC, 1,[Enables AMLOGIC decoder support])
+	PKG_CHECK_MODULES(AMCODEC, libamcodec)
+	PKG_CHECK_MODULES(AMADEC, libamadec)
+	PKG_CHECK_MODULES(DVBCSA, libdvbcsa)
+	ALSA_CFLAGS="-lasound"
+fi
+
+AC_ARG_WITH(fcc,
+	AC_HELP_STRING([--with-fcc], [use FCC specific codes for fast channel change]),
+	[[fcc=$withval]],
+	[[fcc=no]]
+)
+AM_CONDITIONAL(HAVE_FCC_ABILITY, test x"$with_fcc" = xyes)
+if test x"$with_fcc" = xyes ; then
+	AC_DEFINE(HAVE_FCC_ABILITY, 1,[use FCC specific codes for fast channel change])
+fi
+
+if test "$BOXBRAND" == "rpi"; then
+	PKG_CHECK_MODULES(DVBCSA, libdvbcsa)
+	PKG_CHECK_MODULES(LIBNL, libnl-1 >= 1.0-pre8, has_libnl=yes, dummy=no)
+	PKG_CHECK_MODULES(LIBNL, [libnl-3.0 libnl-genl-3.0], has_libnl=yes, dummy=no)
+	if (test "${has_libnl}" = "no"); then
+		AC_MSG_ERROR(Netlink library is required)
+	fi
+#	AC_CHECK_LIB([rpihddevice], [LIBRPIHDDEVICE_LIBS="-lrpihddevice"], [AC_MSG_ERROR([Could not find librpihddevice])])
+#	AC_SUBST(LIBRPIHDDEVICE_LIBS)
+#	PKG_CHECK_MODULES(LIBRPIHDDEVICE, e2-rpihddevice)
+	BASE_LIBS+=" -lrpihddevice"
+	BASE_LIBS+=" $LIBNL_LIBS"
+	AC_DEFINE(OMX_SKIP64BIT, 1, [Required by the RPi implementation])
+	RPI_CFLAGS=" $LIBNL_CFLAGS"
+	CXXFLAGS+="$RPI_CFLAGS"
+	AC_DEFINE(HAVE_RASPBERRYPI, 1,[enable rpi specific stuff])
+fi
+
+AM_CONDITIONAL(DMAMLOGIC, test "$STBPLATFORM" == "dmamlogic")
+AM_CONDITIONAL(RASPBERRYPI, test "$BOXBRAND" == "rpi")
 
 AC_ARG_WITH(libsdl,
 	AS_HELP_STRING([--with-libsdl],[use libsdl, yes or no]),
